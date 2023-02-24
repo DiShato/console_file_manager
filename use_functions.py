@@ -33,36 +33,48 @@
 
 Для реализации основного меню можно использовать пример ниже или написать свой
 """
-
+import os
+import json
 
 def choice_1(cash, cash_deposit = 0):
     '''
     :param cash_deposit: сумма пополнения
     :return: сумма с учетом пополнения
     '''
-    cash +=  cash_deposit
-    return cash
+    cash_new = cash + cash_deposit
+    f = open('cash.txt', 'a')
+    f.write(str(cash_deposit)+',')
+    f.close()
+    return cash_new
 
-def choice_2(cash ,history_shop, sum_shop = 0, name_shop = 'покупка'):
+def choice_2(cash, sum_shop = 0, name_shop = 'покупка'):
     '''
     :param cash: сумма на счете
-    :param history_shop: словарь покупок
     :param sum_shop: сумма покупки
     :param name_shop: наименование покупки
     :return:
     '''
     if cash >= sum_shop:
         cash -= sum_shop
-
     elif cash < sum_shop:
         print('денег не хватает')
 
-    history_shop[name_shop] = sum_shop
-    return cash, history_shop
+    f = open('history_shop.txt', 'a')
+    f.write('покупка {} : {}руб, '.format(name_shop,sum_shop))
+    f.close()
+
+    return cash
 
 def shoping():
-    cash = 0
-    history_shop = {}
+
+    # если нет файлов с историейпокупок и остатка, то создаем
+    if 'cash.txt' not in os.listdir():
+        os.path.exists('cash.txt')
+        f = open('cash.txt', 'w')
+        f.write(str(0) + ',')
+        f.close()
+    if 'history_shop.json' not in os.listdir():
+        os.path.exists('history_shop.json')
 
     while True:
         print('\n1. пополнение счета')
@@ -72,18 +84,19 @@ def shoping():
 
         choice = input('Выберите пункт меню')
         if choice == '1':
-            cash =  choice_1(cash, cash_deposit = int(input('введите сумму пополнения')))
+            cash =  choice_1(cash = int(list(open('cash.txt', 'r'))[0].split(',')[-2]),
+                             cash_deposit = int(input('введите сумму пополнения')))
 
         elif choice == '2':
-            cash, history_shop =  choice_2(cash,
-                                           history_shop,
+            cash =  choice_2(cash = int(list(open('cash.txt', 'r'))[0].split(',')[-2]),
                                            sum_shop = int(input('Введите сумму покупки')),
                                            name_shop = int(input('Введите наименование покупки')))
 
         elif choice == '3':
-            print(history_shop)
+            print( list(open('history_shop.txt', 'r')))
 
         elif choice == '4':
             break
         else:
             print('Неверный пункт меню')
+# shoping()

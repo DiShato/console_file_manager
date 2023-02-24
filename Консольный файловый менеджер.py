@@ -16,7 +16,8 @@ while True:
     print('8. создатель программы')
     print('9. играть в викторину')
     print('10. мой банковский счет')
-    print('11. выход')
+    print('11. сохранить содержимое рабочей директории в файл')
+    print('12. выход')
     print()
 
     choice = input('Выберите пункт меню')
@@ -36,10 +37,11 @@ while True:
         print("Каталог:", os.listdir())
 
     if choice == '5':
-        print("Каталог:", [x for x in os.listdir() if x[-3:] != '.py'])
+
+        print("Каталог:", [x for x in os.listdir() if os.path.isdir(x)])
 
     if choice == '6':
-        print("Файлы .py:", [x for x in os.listdir() if x[-3:] == '.py'])
+        print("Файлы", [x for x in os.listdir() if os.path.isfile(x)])
 
     if choice == '7':
         print(' OS is', sys.platform, '(', os.name, ')')
@@ -54,4 +56,12 @@ while True:
         shoping()
 
     if choice == '11':
+        if 'listdir.txt' not in os.listdir():
+            os.path.exists('listdir.txt')
+        f = open('listdir.txt', 'w')
+        f.write(' Каталог : ' + str([x for x in os.listdir() if os.path.isdir(x)]))
+        f.write(' Файлы : ' + str([x for x in os.listdir() if os.path.isfile(x)]))
+        f.close()
+
+    if choice == '12':
         break
