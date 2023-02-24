@@ -33,29 +33,56 @@
 
 Для реализации основного меню можно использовать пример ниже или написать свой
 """
+
+
+def choice_1(cash, cash_deposit = 0):
+    '''
+    :param cash_deposit: сумма пополнения
+    :return: сумма с учетом пополнения
+    '''
+    cash +=  cash_deposit
+    return cash
+
+def choice_2(cash ,history_shop, sum_shop = 0, name_shop = 'покупка'):
+    '''
+    :param cash: сумма на счете
+    :param history_shop: словарь покупок
+    :param sum_shop: сумма покупки
+    :param name_shop: наименование покупки
+    :return:
+    '''
+    if cash >= sum_shop:
+        cash -= sum_shop
+
+    elif cash < sum_shop:
+        print('денег не хватает')
+
+    history_shop[name_shop] = sum_shop
+    return cash, history_shop
+
 def shoping():
     cash = 0
     history_shop = {}
 
     while True:
-        print('1. пополнение счета')
+        print('\n1. пополнение счета')
         print('2. покупка')
         print('3. история покупок')
-        print('4. выход')
+        print('4. выход\n')
 
         choice = input('Выберите пункт меню')
         if choice == '1':
-            cash += int( input('введите сумму пополнения :'))
+            cash =  choice_1(cash, cash_deposit = int(input('введите сумму пополнения')))
+
         elif choice == '2':
-            shop =  int( input('введите сумму покупки:'))
-            if cash >= shop:
-                name_shop = input('введите наименование покупки :')
-                cash -= shop
-                history_shop[name_shop]=shop
-            elif cash < shop:
-                print('денег не хватает')
+            cash, history_shop =  choice_2(cash,
+                                           history_shop,
+                                           sum_shop = int(input('Введите сумму покупки')),
+                                           name_shop = int(input('Введите наименование покупки')))
+
         elif choice == '3':
             print(history_shop)
+
         elif choice == '4':
             break
         else:
