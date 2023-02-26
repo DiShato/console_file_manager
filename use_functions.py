@@ -33,29 +33,82 @@
 
 Для реализации основного меню можно использовать пример ниже или написать свой
 """
+import os
+import json
+
+
+def choice_1(cash, cash_deposit=0):
+    '''
+    :param cash_deposit: сумма пополнения
+    :return: сумма с учетом пополнения
+    '''
+    try:
+        cash = float(cash)
+        cash_deposit = float(cash_deposit)
+    except:
+        print('Ошибка! Введено не число! Повторите попытку!')
+    else:
+        cash_new = cash + cash_deposit
+        f = open('cash.txt', 'a')
+        f.write(str(cash_deposit) + ',')
+        f.close()
+        return cash_new
+
+
+def choice_2(cash, sum_shop=0, name_shop='покупка'):
+    '''
+    :param cash: сумма на счете
+    :param sum_shop: сумма покупки
+    :param name_shop: наименование покупки
+    :return:
+    '''
+    try:
+        cash = float(cash)
+        sum_shop = float(sum_shop)
+    except:
+        print('Ошибка! Введено не число! Повторите попытку!')
+    else:
+        if cash >= sum_shop:
+            cash -= sum_shop
+        elif cash < sum_shop:
+            print('денег не хватает!')
+
+        f = open('history_shop.txt', 'a')
+        f.write('покупка {} : {}руб, '.format(name_shop, sum_shop))
+        f.close()
+
+    return cash
+
+
 def shoping():
-    cash = 0
-    history_shop = {}
+    # если нет файлов с историейпокупок и остатка, то создаем
+    if 'cash.txt' not in os.listdir():
+        os.path.exists('cash.txt')
+        f = open('cash.txt', 'w')
+        f.write(str(0) + ',')
+        f.close()
+    if 'history_shop.json' not in os.listdir():
+        os.path.exists('history_shop.json')
 
     while True:
-        print('1. пополнение счета')
+        print('\n1. пополнение счета')
         print('2. покупка')
         print('3. история покупок')
-        print('4. выход')
+        print('4. выход\n')
 
         choice = input('Выберите пункт меню')
         if choice == '1':
-            cash += int( input('введите сумму пополнения :'))
+            cash = choice_1(cash=list(open('cash.txt', 'r'))[0].split(',')[-2],
+                            cash_deposit=input('введите сумму пополнения'))
+
         elif choice == '2':
-            shop =  int( input('введите сумму покупки:'))
-            if cash >= shop:
-                name_shop = input('введите наименование покупки :')
-                cash -= shop
-                history_shop[name_shop]=shop
-            elif cash < shop:
-                print('денег не хватает')
+            cash = choice_2(cash=list(open('cash.txt', 'r'))[0].split(',')[-2],
+                            sum_shop=input('Введите сумму покупки'),
+                            name_shop=input('Введите наименование покупки'))
+
         elif choice == '3':
-            print(history_shop)
+            print(list(open('history_shop.txt', 'r')))
+
         elif choice == '4':
             break
         else:
